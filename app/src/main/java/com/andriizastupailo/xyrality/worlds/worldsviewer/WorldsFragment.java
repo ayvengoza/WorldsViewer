@@ -1,5 +1,6 @@
 package com.andriizastupailo.xyrality.worlds.worldsviewer;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,7 @@ public class WorldsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_worlds_list, container, false);
         mWorldsRecyclerView = (RecyclerView) view.findViewById(R.id.worlds_recycler_view);
         mWorldsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        new FetchItemTask().execute();
         updateUI();
         return view;
     }
@@ -68,6 +70,15 @@ public class WorldsFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mWorlds.size();
+        }
+    }
+
+    private class FetchItemTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            new WorldsFetchr().fetchItems();
+            return null;
         }
     }
 }
