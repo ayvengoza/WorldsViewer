@@ -3,6 +3,7 @@ package com.andriizastupailo.xyrality.worlds.worldsviewer;
 import android.net.Uri;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,8 +48,12 @@ public class WorldsFetchr {
         try {
             String jsonString = getUrlString(url);
             Log.i(TAG, "Received JSON: " + jsonString);
+            JSONObject jsonObject = new JSONObject(jsonString);
+            parseItems(jsonObject);
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to fetch items", ioe);
+        } catch (JSONException je) {
+            Log.e(TAG, "Failed to parse JSON", je);
         }
     }
 
@@ -79,5 +84,27 @@ public class WorldsFetchr {
             connection.disconnect();
         }
     }
+
+    private void parseItems(JSONObject jsonBody) throws IOException, JSONException{
+        JSONArray worldsArray = jsonBody.getJSONArray("allAvailableWorlds");
+
+        for(int i = 0; i < worldsArray.length(); i++){
+            JSONObject item = worldsArray.getJSONObject(i);
+            World worldItem = new World();
+            worldItem.setCountry(item.getString("country"));
+            worldItem.setId(item.getInt("id"));
+            worldItem.setLanguage(item.getString("language"));
+            worldItem.setMapUrl(item.getString("mapURL"));
+            worldItem.setName(item.getString("name"));
+            worldItem.setUrl(item.getString("url"));
+            JSONObject worldStatus = item.getJSONObject("worldStatus");
+            worldItem.setDescription(worldStatus.getString("description"));
+            worldItem.setWorldId(worldStatus.getInt("id"));
+            String message = worldsArray.get(i).toString();
+        }
+
+        Log.i(TAG, "Receive " + worldsArray.length() + " world(s)");
+    }
+
 
 }
