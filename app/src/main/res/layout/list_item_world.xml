@@ -12,7 +12,7 @@
         android:text="World name"/>
 
     <TextView
-        android:id="@+id/info"
+        android:id="@+id/world_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Info"/>

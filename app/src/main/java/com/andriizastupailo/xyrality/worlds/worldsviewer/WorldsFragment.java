@@ -9,10 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Handle world items
@@ -29,23 +28,30 @@ public class WorldsFragment extends Fragment {
         mWorldsRecyclerView = (RecyclerView) view.findViewById(R.id.worlds_recycler_view);
         mWorldsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         new FetchItemTask().execute();
-        updateUI();
         return view;
     }
 
     private void updateUI(){
-        List<World> worlds = new ArrayList<>();
-        for(int i=0; i<20; i++){
-            worlds.add(new World());
-        }
+        List<World> worlds = WorldBank.get().getWorlds();
         mAdapter = new WorldAdapter(worlds);
         mWorldsRecyclerView.setAdapter(mAdapter);
     }
 
     private class WorldHolder extends RecyclerView.ViewHolder{
+        private TextView mNameTextView;
+        private TextView mInfoTextView;
+        private World mWorld;
 
         public WorldHolder(LayoutInflater inflater, ViewGroup parent){
             super(inflater.inflate(R.layout.list_item_world, parent, false));
+            mNameTextView = (TextView) itemView.findViewById(R.id.world_name);
+            mInfoTextView = (TextView) itemView.findViewById(R.id.world_info);
+        }
+
+        public void bind(World world){
+            mWorld = world;
+            mNameTextView.setText(mWorld.getName());
+            mInfoTextView.setText(mWorld.getCountry());
         }
     }
 
@@ -64,7 +70,8 @@ public class WorldsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(WorldHolder holder, int position) {
-
+            World world = mWorlds.get(position);
+            holder.bind(world);
         }
 
         @Override
@@ -79,6 +86,11 @@ public class WorldsFragment extends Fragment {
         protected Void doInBackground(Void... voids) {
             new WorldsFetchr().fetchItems();
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            updateUI();
         }
     }
 }

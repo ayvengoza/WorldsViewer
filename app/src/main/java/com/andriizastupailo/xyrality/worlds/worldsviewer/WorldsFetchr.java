@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Class for network connection
@@ -87,7 +88,9 @@ public class WorldsFetchr {
 
     private void parseItems(JSONObject jsonBody) throws IOException, JSONException{
         JSONArray worldsArray = jsonBody.getJSONArray("allAvailableWorlds");
-
+        final  WorldBank worldBank = WorldBank.get();
+        worldBank.clearWorlds();
+        List<World> worlds = worldBank.getWorlds();
         for(int i = 0; i < worldsArray.length(); i++){
             JSONObject item = worldsArray.getJSONObject(i);
             World worldItem = new World();
@@ -100,6 +103,7 @@ public class WorldsFetchr {
             JSONObject worldStatus = item.getJSONObject("worldStatus");
             worldItem.setDescription(worldStatus.getString("description"));
             worldItem.setWorldId(worldStatus.getInt("id"));
+            worlds.add(worldItem);
             String message = worldsArray.get(i).toString();
         }
 
