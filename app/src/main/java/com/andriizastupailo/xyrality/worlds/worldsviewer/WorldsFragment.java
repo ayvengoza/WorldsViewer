@@ -27,8 +27,13 @@ public class WorldsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_worlds_list, container, false);
         mWorldsRecyclerView = (RecyclerView) view.findViewById(R.id.worlds_recycler_view);
         mWorldsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        new FetchItemTask().execute();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new FetchItemTask().execute();
     }
 
     private void updateUI(){

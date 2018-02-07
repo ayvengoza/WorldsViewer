@@ -82,6 +82,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             PreferenceStore.setLogin(getActivity(), mTextViewEmail.getText().toString());
             PreferenceStore.setPassword(getActivity(), mTextViewPassword.getText().toString());
             getFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                     .replace(R.id.fragment_container, new WorldsFragment())
                     .commit();
         }
