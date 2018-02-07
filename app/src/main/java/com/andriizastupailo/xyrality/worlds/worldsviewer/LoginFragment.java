@@ -69,13 +69,21 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }
 
         if(!hasError){
+            hideKeyboard(getActivity(), getActivity().getCurrentFocus());
             boolean isNetEnable = isNetworkConnected(getActivity());
             if(!isNetEnable){
                 hasError = true;
-                hideKeyboard(getActivity(), getActivity().getCurrentFocus());
                 Snackbar.make(mRootView, "Missing internet connection", Snackbar.LENGTH_SHORT)
                         .show();
             }
+        }
+
+        if(!hasError){
+            PreferenceStore.setLogin(getActivity(), mTextViewEmail.getText().toString());
+            PreferenceStore.setPassword(getActivity(), mTextViewPassword.getText().toString());
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new WorldsFragment())
+                    .commit();
         }
     }
 
