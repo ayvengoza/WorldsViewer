@@ -12,6 +12,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -51,6 +52,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             mTextInputLayoutEmail.setErrorEnabled(false);
         } else {
             mTextInputLayoutEmail.setError(getString(R.string.email_error));
+            mTextViewEmail.requestFocus();
             hasError = true;
         }
 
@@ -61,6 +63,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         } else {
             String errorString = String.format(getString(R.string.password_error_format), MIN_PASSWORD_LENGTH);
             mTextInputLayoutPassword.setError(errorString);
+            if(!hasError)
+                mTextViewPassword.requestFocus();
             hasError = true;
         }
 
@@ -68,6 +72,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             boolean isNetEnable = isNetworkConnected(getActivity());
             if(!isNetEnable){
                 hasError = true;
+                hideKeyboard(getActivity(), getActivity().getCurrentFocus());
                 Snackbar.make(mRootView, "Missing internet connection", Snackbar.LENGTH_SHORT)
                         .show();
             }
@@ -82,5 +87,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             return activeNework.isConnectedOrConnecting();
         }
         return false;
+    }
+
+    private static void hideKeyboard(Context context, View view){
+        InputMethodManager imm =
+                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
