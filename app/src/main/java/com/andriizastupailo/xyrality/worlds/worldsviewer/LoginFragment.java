@@ -1,7 +1,11 @@
 package com.andriizastupailo.xyrality.worlds.worldsviewer;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Patterns;
@@ -59,5 +63,24 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             mTextInputLayoutPassword.setError(errorString);
             hasError = true;
         }
+
+        if(!hasError){
+            boolean isNetEnable = isNetworkConnected(getActivity());
+            if(!isNetEnable){
+                hasError = true;
+                Snackbar.make(mRootView, "Missing internet connection", Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
+
+    private static boolean isNetworkConnected(Context context){
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNework = cm.getActiveNetworkInfo();
+        if(activeNework != null){
+            return activeNework.isConnectedOrConnecting();
+        }
+        return false;
     }
 }
