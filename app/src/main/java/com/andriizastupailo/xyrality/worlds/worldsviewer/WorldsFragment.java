@@ -9,6 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,12 +27,20 @@ public class WorldsFragment extends Fragment {
     private WorldAdapter mAdapter;
     private Toolbar mToolbar;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_worlds_list, container, false);
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mToolbar.setTitle(R.string.toolbar_title);
+
         mWorldsRecyclerView = (RecyclerView) view.findViewById(R.id.worlds_recycler_view);
         mWorldsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return view;
@@ -41,10 +52,34 @@ public class WorldsFragment extends Fragment {
         new FetchItemTask().execute();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.worlds_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.log_out_menu:
+                moveToLogin();
+                return true;
+            default:
+                return false;
+        }
+    }
+
     private void updateUI(){
         List<World> worlds = WorldBank.get().getWorlds();
         mAdapter = new WorldAdapter(worlds);
         mWorldsRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void moveToLogin(){
+        getFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+                .replace(R.id.fragment_container, new LoginFragment())
+                .commit();
     }
 
     private class WorldHolder extends RecyclerView.ViewHolder{

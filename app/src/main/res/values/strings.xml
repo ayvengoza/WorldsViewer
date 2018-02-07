@@ -7,4 +7,5 @@
     <string name="email_error">example@domain.com</string>
     <string name="password_error_format">Use at least %1$d characters</string>
     <string name="toolbar_title">Xworlds</string>
+    <string name="menu_log_out">Log out</string>
 </resources>
