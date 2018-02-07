@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">WorldsViewer</string>
+    <string name="cover_label">XYRALITY\nworlds</string>
+    <string name="email_hint">Email address</string>
+    <string name="password_hint">Password</string>
+    <string name="button_signin">Sign in</string>
+    <string name="email_error">example@domain.com</string>
+    <string name="password_error_format">Use at least %1$d characters</string>
 </resources>

@@ -9,6 +9,6 @@ public class WorldsActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new WorldsFragment();
+        return new LoginFragment();
     }
 }
