@@ -6,9 +6,12 @@ import android.os.Bundle;
 
 public class WorldsActivity extends SingleFragmentActivity {
 
-
     @Override
     protected Fragment createFragment() {
-        return new LoginFragment();
+        if(PreferenceStore.isUserSet(this)){
+            return new WorldsFragment();
+        } else {
+            return new LoginFragment();
+        }
     }
 }
