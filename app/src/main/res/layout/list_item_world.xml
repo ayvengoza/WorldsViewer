@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
+    android:focusable="true"
+    android:baselineAligned="false"
     android:minHeight="56dp"
     android:orientation="horizontal"
     android:background="@drawable/bottom_stroke"
     android:paddingEnd="?listPreferredItemPaddingRight"
-    android:paddingLeft="?listPreferredItemPaddingLeft"
-    android:paddingRight="?listPreferredItemPaddingRight"
     android:paddingStart="?listPreferredItemPaddingLeft">
 
     <LinearLayout
@@ -21,7 +21,7 @@
             android:id="@+id/world_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left"
+            android:gravity="start"
             android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:gravity="left"
+            android:gravity="start"
             android:textAppearance="@android:style/TextAppearance.Material.Small" />
 
     </LinearLayout>
@@ -44,7 +44,7 @@
             android:id="@+id/online_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"/>
+            android:gravity="end"/>
     </LinearLayout>
 
 </LinearLayout>
