@@ -1,6 +1,7 @@
 package com.andriizastupailo.xyrality.worlds.worldsviewer;
 
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -11,7 +12,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.NetworkInterface;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,33 +32,31 @@ public class WorldsFetchr {
     private static final String ACCEPT_KEY_KEY = "accept";
     private static final String CONTENT_TYPE_KEY = "content-type";
 
-    private static final String LOGIN_VALUE = "android.test@xyrality.com";
-    private static final String PASSWORD_VALUE = "password";
-    private static final String DEVICE_TYPE_VALUE = "SM-A510F 7.0";
-    private static final String DEVIDE_ID_VALUE = "B8:57:D8:FE:D9:AB";
     private static final String ACCEPT_KEY_VALUE = "application/json";
     private static final String CONTENT_TYPE_VALUE = "application/json";
     private static final String URL_VALUE = "http://backend1.lordsandknights.com/XYRALITY/WebObjects/BKLoginServer.woa/wa/worlds";
 
 
-    public void fetchItems(){
+    public boolean fetchItems(String login, String password){
         String url = Uri.parse(URL_VALUE)
                 .buildUpon()
-                .appendQueryParameter(LOGIN_KEY, LOGIN_VALUE)
-                .appendQueryParameter(PASSWORD_KEY, PASSWORD_VALUE)
-                .appendQueryParameter(DEVICE_TYPE_KEY, DEVICE_TYPE_VALUE)
-                .appendQueryParameter(DEVIDE_ID_KEY, DEVIDE_ID_VALUE)
+                .appendQueryParameter(LOGIN_KEY, login)
+                .appendQueryParameter(PASSWORD_KEY, password)
+                .appendQueryParameter(DEVICE_TYPE_KEY, getDeviceType())
+                .appendQueryParameter(DEVIDE_ID_KEY, getDeviceId())
                 .build().toString();
         try {
             String jsonString = getUrlString(url);
             Log.i(TAG, "Received JSON: " + jsonString);
             JSONObject jsonObject = new JSONObject(jsonString);
             parseItems(jsonObject);
+            return true;
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to fetch items", ioe);
         } catch (JSONException je) {
             Log.e(TAG, "Failed to parse JSON", je);
         }
+        return false;
     }
 
     public String getUrlString(String urlSpec) throws IOException {
@@ -104,11 +105,38 @@ public class WorldsFetchr {
             worldItem.setDescription(worldStatus.getString("description"));
             worldItem.setWorldId(worldStatus.getInt("id"));
             worlds.add(worldItem);
-            String message = worldsArray.get(i).toString();
         }
 
         Log.i(TAG, "Receive " + worldsArray.length() + " world(s)");
     }
 
+    private static String getDeviceType(){
+        return String.format("%s %s", Build.MODEL, Build.VERSION.RELEASE);
+    }
 
+    private static String getDeviceId() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null) {
+                    return "";
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(String.format("%02X:",b));
+                }
+
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
+            }
+        } catch (Exception ex) {
+        }
+        return "02:00:00:00:00:00";
+    }
 }

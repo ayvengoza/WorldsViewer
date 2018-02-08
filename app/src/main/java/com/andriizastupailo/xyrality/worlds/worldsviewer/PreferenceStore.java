@@ -22,28 +22,12 @@ public class PreferenceStore {
         return getString(context, PASSORD_KEY);
     }
 
-    public static String getDeviceType(Context context){
-        return getString(context, DEVICE_TYPE_KEY);
-    }
-
-    public static String getDeviceId(Context context){
-        return getString(context, DEVICE_ID_KEY);
-    }
-
     public static void setLogin(Context context, String login){
         setString(context, LOGIN_KEY, login);
     }
 
     public static void setPassword(Context context, String password){
         setString(context, PASSORD_KEY, password);
-    }
-
-    public static void setDeviceType(Context context, String deviceType){
-        setString(context, DEVICE_TYPE_KEY, deviceType);
-    }
-
-    public static void setDeviceId(Context context, String deviceId){
-        setString(context, DEVICE_ID_KEY, deviceId);
     }
 
     public static void cleanUser(Context context){

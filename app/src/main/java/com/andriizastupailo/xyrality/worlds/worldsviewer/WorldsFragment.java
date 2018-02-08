@@ -49,7 +49,7 @@ public class WorldsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        new FetchItemTask().execute();
+        sendRequest();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class WorldsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.log_out_menu:
-                moveToLogin();
+                moveToLoginFragment();
                 return true;
             default:
                 return false;
@@ -75,7 +75,14 @@ public class WorldsFragment extends Fragment {
         mWorldsRecyclerView.setAdapter(mAdapter);
     }
 
-    private void moveToLogin(){
+    private void sendRequest(){
+        String login = PreferenceStore.getLogin(getActivity());
+        String password = PreferenceStore.getPassword(getActivity());
+        new FetchItemTask().execute(login, password);
+    }
+
+    private void moveToLoginFragment(){
+        PreferenceStore.cleanUser(getActivity());
         getFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                 .replace(R.id.fragment_container, new LoginFragment())
@@ -125,17 +132,20 @@ public class WorldsFragment extends Fragment {
         }
     }
 
-    private class FetchItemTask extends AsyncTask<Void, Void, Void> {
+    private class FetchItemTask extends AsyncTask<String, Void, Boolean> {
 
         @Override
-        protected Void doInBackground(Void... voids) {
-            new WorldsFetchr().fetchItems();
-            return null;
+        protected Boolean doInBackground(String... strings) {
+            return new WorldsFetchr().fetchItems(strings[0], strings[1]);
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            updateUI();
+        protected void onPostExecute(Boolean result) {
+            if(result) {
+                updateUI();
+            } else {
+                moveToLoginFragment();
+            }
         }
     }
 }
