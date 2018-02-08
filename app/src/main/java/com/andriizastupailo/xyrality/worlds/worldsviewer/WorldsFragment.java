@@ -40,7 +40,6 @@ public class WorldsFragment extends Fragment {
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mToolbar.setTitle(R.string.toolbar_title);
-
         mWorldsRecyclerView = (RecyclerView) view.findViewById(R.id.worlds_recycler_view);
         mWorldsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return view;
@@ -92,18 +91,21 @@ public class WorldsFragment extends Fragment {
     private class WorldHolder extends RecyclerView.ViewHolder{
         private TextView mNameTextView;
         private TextView mInfoTextView;
+        private TextView mOnlineTextView;
         private World mWorld;
 
         public WorldHolder(LayoutInflater inflater, ViewGroup parent){
             super(inflater.inflate(R.layout.list_item_world, parent, false));
             mNameTextView = (TextView) itemView.findViewById(R.id.world_name);
             mInfoTextView = (TextView) itemView.findViewById(R.id.world_info);
+            mOnlineTextView = (TextView) itemView.findViewById(R.id.online_text_view);
         }
 
         public void bind(World world){
             mWorld = world;
             mNameTextView.setText(mWorld.getName());
             mInfoTextView.setText(mWorld.getCountry());
+            mOnlineTextView.setText(mWorld.getDescription());
         }
     }
 
